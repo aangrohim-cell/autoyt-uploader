@@ -1,0 +1,28 @@
+name: Auto YouTube Uploader
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # tiap 6 jam
+  workflow_dispatch:
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2
+
+      - name: Run uploader
+        env:
+          GDRIVE_JSON: ${{ secrets.GDRIVE_JSON }}
+        run: |
+          python main.py
